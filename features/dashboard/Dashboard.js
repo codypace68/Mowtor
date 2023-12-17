@@ -11,6 +11,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CutsChart from "features/cuts/CutsChart";
 import StatsCard from "components/Cards/StatsCard";
+import MonthlyCuts from "./MonthlyCuts";
 
 export default function Dashboard() {
   return (
@@ -52,15 +53,8 @@ export default function Dashboard() {
           <EarningsChart />
         </Card.CardBody>
       </Card>
-      <Card width="6">
-        <Card.CardHeader
-          title="Cuts This Month"
-          icon={<FontAwesomeIcon icon={faAddressBook}></FontAwesomeIcon>}
-        />
-        <Card.CardBody>
-          <CutsChart />
-        </Card.CardBody>
-      </Card>
+
+      <MonthlyCuts />
     </>
   );
 }
