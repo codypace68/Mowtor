@@ -7,7 +7,7 @@ export default function MonthlyCuts() {
   return (
     <Card width="6">
       <Card.CardHeader
-        title="Cuts This Month"
+        title="Cuts in next 30 days"
         icon={<FontAwesomeIcon icon={faAddressBook}></FontAwesomeIcon>}
       />
       <Card.CardBody>
