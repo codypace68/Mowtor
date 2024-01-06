@@ -37,12 +37,12 @@ const data = [
 
 export default function CutsChart() {
   const dispatch = useDispatch();
-  const { cuts } = useSelector(getCuts);
+  const { cuts, isLoading } = useSelector(getCuts);
   const [cutData, setCutData] = useState([]);
   const [thirtyDaysFromNow, setThirtyDaysFromNow] = useState(new Date());
 
   useEffect(() => {
-    dispatch(fetchCutsThunk());
+    dispatch(fetchCutsThunk(new Date().toISOString().split("T")[0]));
   }, [dispatch]);
 
   useEffect(() => {
@@ -50,13 +50,11 @@ export default function CutsChart() {
   }, []);
 
   useEffect(() => {
-    if (!cuts.length) return;
+    if (isLoading) return;
 
     const scheduledCuts = {};
 
-    cuts.forEach((cut, i) => {
-      console.log("forEach");
-
+    cuts.forEach((cut) => {
       const cutDate = cut.scheduled_date.split("T")[0];
 
       if (!scheduledCuts[cutDate]) {
@@ -83,7 +81,6 @@ export default function CutsChart() {
     ) {
       // fill in missing dates in scheduledCuts
       const date = i.toISOString().split("T")[0];
-      console.log("forloop");
 
       if (!scheduledCuts[date]) {
         scheduledCuts[date] = {
@@ -96,12 +93,8 @@ export default function CutsChart() {
       }
     }
 
-    console.log(
-      "setting cut data",
-      Object.values(scheduledCuts).sort(
-        (a, b) => new Date(a.scheduled_date) - new Date(b.scheduled_date)
-      )
-    );
+    console.log(scheduledCuts);
+
     setCutData(
       Object.values(scheduledCuts).sort(
         (a, b) => new Date(a.scheduled_date) - new Date(b.scheduled_date)
@@ -109,18 +102,12 @@ export default function CutsChart() {
     );
   }, [cuts, thirtyDaysFromNow]);
 
-  // {
-  //   scheduled: 10,
-  //   completed: 5,
-  //   cancelled: 2,
-  // }
-
   return (
     <div>
       <ResponsiveContainer width="100%" height={500}>
         <LineChart data={cutData}>
           <XAxis dataKey="scheduled_date" />
-          <YAxis baseFrequency={1} />
+          <YAxis tickCount={1} />
           <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
           <Tooltip />
           <Line type="monotone" dataKey="scheduled" stroke="#009688" />

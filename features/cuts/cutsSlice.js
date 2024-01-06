@@ -2,11 +2,14 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { fetchCuts } from "services/apiCuts";
 
-export const fetchCutsThunk = createAsyncThunk("cuts/fetchCuts", async () => {
-  const response = await fetchCuts();
+export const fetchCutsThunk = createAsyncThunk(
+  "cuts/fetchCuts",
+  async (startDate) => {
+    const response = await fetchCuts(startDate);
 
-  return response.data;
-});
+    return response.data;
+  }
+);
 
 const cutsSlice = createSlice({
   name: "cuts",
@@ -24,6 +27,7 @@ const cutsSlice = createSlice({
     builder.addCase(fetchCutsThunk.fulfilled, (state, action) => {
       console.log("setting cuts", action.payload);
       state.cuts = action.payload;
+      state.isLoading = false;
     });
     builder.addCase(fetchCutsThunk.pending, (state, action) => {
       console.log("fetching cuts:... pending");
