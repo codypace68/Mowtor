@@ -4,8 +4,19 @@ import { fetchCuts } from "services/apiCuts";
 
 export const fetchCutsThunk = createAsyncThunk(
   "cuts/fetchCuts",
-  async (startDate) => {
+  async (startDate, endDate) => {
     const response = await fetchCuts(startDate);
+
+    return response.data;
+  }
+);
+
+export const fetchPastThreeMonthCutsThunk = createAsyncThunk(
+  "cuts/fetchPastCuts",
+  async () => {
+    const startDate = new Date();
+    startDate.setMonth(startDate.getMonth() - 3);
+    const response = await fetchCuts(startDate.toISOString().split("T")[0]);
 
     return response.data;
   }
@@ -17,6 +28,7 @@ const cutsSlice = createSlice({
     isLoading: false,
     error: null,
     cuts: [],
+    pastCuts: [],
   },
   reducers: {
     setCuts: (state, action) => {
@@ -35,6 +47,21 @@ const cutsSlice = createSlice({
     });
     builder.addCase(fetchCutsThunk.rejected, (state, action) => {
       console.log("fetching cuts:... rejected", action.error);
+      state.isLoading = false;
+      state.error = action.error;
+    });
+
+    builder.addCase(fetchPastThreeMonthCutsThunk.fulfilled, (state, action) => {
+      console.log("setting past cuts", action.payload);
+      state.pastCuts = action.payload;
+      state.isLoading = false;
+    });
+    builder.addCase(fetchPastThreeMonthCutsThunk.pending, (state, action) => {
+      console.log("fetching past cuts:... pending");
+      state.isLoading = true;
+    });
+    builder.addCase(fetchPastThreeMonthCutsThunk.rejected, (state, action) => {
+      console.log("fetching past cuts:... rejected", action.error);
       state.isLoading = false;
       state.error = action.error;
     });

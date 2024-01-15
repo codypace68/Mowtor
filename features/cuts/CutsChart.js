@@ -12,29 +12,6 @@ import {
 import { fetchCutsThunk, getCuts } from "./cutsSlice";
 import { useEffect, useState } from "react";
 
-const data = [
-  {
-    name: "11-14",
-    Cuts: 5,
-    "Cancelled Cuts": 1,
-  },
-  {
-    name: "11-15",
-    Cuts: 10,
-    "Cancelled Cuts": 2,
-  },
-  {
-    name: "11-16",
-    Cuts: 4,
-    "Cancelled Cuts": 1,
-  },
-  {
-    name: "11-17",
-    Cuts: 15,
-    "Cancelled Cuts": 0,
-  },
-];
-
 export default function CutsChart() {
   const dispatch = useDispatch();
   const { cuts, isLoading } = useSelector(getCuts);
